@@ -3,28 +3,28 @@
             [com.inferstructure.tock.arity :refer :all])
   (:import [clojure.lang ArityException ExceptionInfo]))
 
-(defn df2
+(defn arity2-fn
   ([a b] [:2 a b]))
 
-(deftest tf2-test
-  (testing "df2"
+(deftest arity2-fn-test
+  (testing "arity2-fn"
     (is (thrown-with-msg? ExceptionInfo
                           #"Function does not have a supporting arit."
-                          (apply-last-max-arity df2 [1])))
-    (is (= (apply-last-max-arity df2 [1 2])
+                          (apply-last-max-arity arity2-fn [1])))
+    (is (= (apply-last-max-arity arity2-fn [1 2])
            [:2 1 2]))
-    (is (= (apply-last-max-arity df2 [1 2 3])
+    (is (= (apply-last-max-arity arity2-fn [1 2 3])
            [:2 2 3]))))
 
-(defn df2+4
+(defn arity2+4-fn
   ([] [:0])
   ([a b] [:2 a b])
   ([a b c d] [:4 a b c d]))
 
-(deftest tf2+4-test
-  (testing "df2+4"
+(deftest arity2+4-fn-test
+  (testing "arity2+4-fn"
     (are [a t]
-      (= (apply-last-max-arity df2+4 a) t)
+      (= (apply-last-max-arity arity2+4-fn a) t)
       []            [:0]
       [1]           [:0]
       [1 2]         [:2 1 2]
@@ -33,16 +33,16 @@
       [1 2 3 4 5]   [:4 2 3 4 5]
       [1 2 3 4 5 6] [:4 3 4 5 6])))
 
-(defn df2+4+v
+(defn arity2+4+v-fn
   ([] [:0])
   ([a b] [:2 a b])
   ([a b c d] [:4 a b c d])
   ([a b c d & r] (into [:v a b c d] r)))
 
-(deftest tf2+4+v-test
-  (testing "df2+4+v"
+(deftest arity2+4+v-fn-test
+  (testing "arity2+4+v-fn"
     (are [a t]
-      (= (apply-last-max-arity df2+4+v a) t)
+      (= (apply-last-max-arity arity2+4+v-fn a) t)
       []            [:0]
       [1]           [:0]
       [1 2]         [:2 1 2]
@@ -51,32 +51,32 @@
       [1 2 3 4 5]   [:v 1 2 3 4 5]
       [1 2 3 4 5 6] [:v 1 2 3 4 5 6])))
 
-(defn dfv
+(defn arityv-fn
   ([& r] (into [:v] r)))
 
-(deftest tfv-test
-  (testing "dfv"
+(deftest arityv-fn-test
+  (testing "arityv-fn"
     (are [a t]
-      (= (apply-last-max-arity dfv a) t)
+      (= (apply-last-max-arity arityv-fn a) t)
       []      [:v]
       [1]     [:v 1]
       [1 2]   [:v 1 2]
       [1 2 3] [:v 1 2 3])))
 
-(defn dfgapv
+(defn arity1+gap+v-fn
   ([a] [:1 a])
   ([a b c & r] (into [:v a b c] r)))
 
-(deftest tfgapv-test
-  (testing "dfgapv"
+(deftest arity1+gap+v-fn-test
+  (testing "arity1+gap+v-fn"
     (are [a t]
-      (= (apply-last-max-arity dfgapv a) t)
+      (= (apply-last-max-arity arity1+gap+v-fn a) t)
       [1]       [:1 1]
       [1 2 3]   [:v 1 2 3]
       [1 2 3 4] [:v 1 2 3 4])))
 
-(deftest tfgapv-ex-test
-  (testing "dfgapv"
+(deftest arity1+gap+v-fn-ex-test
+  (testing "arity1+gap+v-fn-ex"
     (is (thrown-with-msg? ArityException
                           #"Wrong number of args \(2\)"
-                          (apply-last-max-arity dfgapv [1 2])))))
+                          (apply-last-max-arity arity1+gap+v-fn [1 2])))))

@@ -1,8 +1,13 @@
 {:paths ["src"]
+
  :deps {org.clojure/clojure {:mvn/version "1.10.1"}}
+
  :aliases
- {:test {:extra-paths ["test"]
+ {:dev {:extra-paths ["dev"]}
+
+  :test {:extra-paths ["test"]
          :extra-deps {org.clojure/test.check {:mvn/version "1.0.0"}}}
+
   :runner
   {:extra-deps {com.cognitect/test-runner
                 {:git/url "https://github.com/cognitect-labs/test-runner"
@@ -11,7 +16,9 @@
                "-d" "test"]}
   :jar {:extra-deps {seancorfield/depstar {:mvn/version "1.0.94"}}
         :main-opts ["-m" "hf.depstar.jar" "tock.jar"]}
-  :install {:extra-deps {deps-deploy {:mvn/version "0.0.9"}}
+
+  :install {:extra-deps {deps-deploy/deps-deploy {:mvn/version "0.0.9"}}
             :main-opts ["-m" "deps-deploy.deps-deploy" "install" "tock.jar"]}
-  :deploy {:extra-deps {deps-deploy {:mvn/version "0.0.9"}}
+
+  :deploy {:extra-deps {deps-deploy/deps-deploy {:mvn/version "0.0.9"}}
            :main-opts ["-m" "deps-deploy.deps-deploy" "deploy" "tock.jar"]}}}

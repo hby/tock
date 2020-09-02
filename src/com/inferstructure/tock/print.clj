@@ -1,14 +1,12 @@
 (ns com.inferstructure.tock.print
   (:import [clojure.lang IPending]))
 
+(def ^:dynamic *print-look-ahead-length* 2)
+
 (defn seq->str
   [s]
-  (if (and (instance? IPending s) (realized? s))
-    (if (= 2 (count s))
-      (str s)
-      (str "(" (first s) " <+" (count s) " more>)"))
-    (let [ft (take 2 s)
-          r (drop 2 s)]
-      (if (seq r)
-        (str "(" (first ft) " <+unrealized>)")
-        (str (apply list ft))))))
+  (let [[f' r] (split-at *print-look-ahead-length* s)
+        f (apply list f')]
+    (if (seq r)
+      (str "(" (first f) " " (second f) " <+ more>)")
+      (str f))))
