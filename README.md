@@ -14,6 +14,7 @@ Not at clojars.org yet.
 
 Better Readme and blog post coming. For now, a REPL session:
 ```clojure
+% clj
 user=> (require '[com.inferstructure.tock :as tk])
 nil
 user=> (def bit (tk/digit :tock-builtin/seq [0 1]))
@@ -21,14 +22,14 @@ user=> (def bit (tk/digit :tock-builtin/seq [0 1]))
 user=> (def two-bit-counter (tk/counter [bit bit]))
 #'user/two-bit-counter
 user=> (-> two-bit-counter
-           start
-           value-seq)
+           (tk/start)
+           (tk/value-seq))
 ((0 0) (0 1) (1 0) (1 1))
 user=> (def four-bit-counter (tk/counter [two-bit-counter two-bit-counter]))
 #'user/four-bit-counter
 user=> (-> four-bit-counter
-           start
-           value-seq)
+           (tk/start)
+           (tk/value-seq))
 ((0 0 0 0) (0 0 0 1) (0 0 1 0) (0 0 1 1) (0 1 0 0) (0 1 0 1) (0 1 1 0) (0 1 1 1) (1 0 0 0) (1 0 0 1) (1 0 1 0) (1 0 1 1) (1 1 0 0) (1 1 0 1) (1 1 1 0) (1 1 1 1))
 user=> (defn leap?
          [y]
@@ -40,28 +41,28 @@ user=> (defn leap?
              true)
            false))
 #'user/leap?
-user=> (def ymd (counter [(digit :tock-builtin/fn (fn [] (iterate inc 2020)))
-                          (digit :tock-builtin/fn (fn [] (range 1 13)))
-                          (digit :tock-builtin/fn (fn [y m]
-                                                    (case m
-                                                      (1 3 5 7 8 10 12) (range 1 32)
-                                                      2 (range 1 (if (leap? y) 30 29))
-                                                      (4 6 9 11) (range 1 31))))]))
+user=> (def ymd (tk/counter [(tk/digit :tock-builtin/fn (fn [] (iterate inc 2020)))
+                             (tk/digit :tock-builtin/fn (fn [] (range 1 13)))
+                             (tk/digit :tock-builtin/fn (fn [y m]
+                                                           (case m
+                                                             (1 3 5 7 8 10 12) (range 1 32)
+                                                             2 (range 1 (if (leap? y) 30 29))
+                                                             (4 6 9 11) (range 1 31))))]))
 #'user/ymd
 user=> (->> (-> ymd
-                start
-                value-seq)
+                (tk/start)
+                (tk/value-seq))
             first)
 (2020 1 1)
 user=> (->> (-> ymd
-                start
-                value-seq)
+                (tk/start)
+                (tk/value-seq))
             (drop 365)
             (take 2))
 ((2020 12 31) (2021 1 1))
 user=> (->> (-> ymd
-                (start [2020 11 3])
-                value-seq)
+                (tk/start [2020 11 3])
+                (tk/value-seq))
             (take-while #(not= % [2021 1 1]))
             count)
 59
