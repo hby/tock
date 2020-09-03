@@ -59,7 +59,13 @@ user=> (->> (-> ymd
             (drop 365)
             (take 2))
 ((2020 12 31) (2021 1 1))
-user=> 
+user=> (->> (-> ymd
+                (start [2020 11 3])
+                value-seq)
+            (take-while #(not= % [2021 1 1]))
+            count)
+59
+user=>
 ```
 
 ## Installing and deploying
