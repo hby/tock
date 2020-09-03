@@ -12,5 +12,7 @@ This change log follows the conventions of [keepachangelog.com](http://keepachan
 ### Added
 - Initial release
 
+<!---
 [Unreleased]: https://github.com/hby/tock/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/hby/tock/releases/tag/v0.1.0
+--->
