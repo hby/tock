@@ -1,12 +1,15 @@
-{:paths ["src"]
+{:paths
+ ["src"]
 
- :deps {org.clojure/clojure {:mvn/version "1.10.1"}}
+ :deps
+ {org.clojure/clojure {:mvn/version "1.10.1"}}
 
  :aliases
  {:dev {:extra-paths ["dev"]}
 
-  :test {:extra-paths ["test"]
-         :extra-deps {org.clojure/test.check {:mvn/version "1.0.0"}}}
+  :test
+  {:extra-paths ["test"]
+   :extra-deps {org.clojure/test.check {:mvn/version "1.0.0"}}}
 
   :runner
   {:extra-deps {com.cognitect/test-runner
@@ -14,11 +17,15 @@
                  :sha "f7ef16dc3b8332b0d77bc0274578ad5270fbfedd"}}
    :main-opts ["-m" "cognitect.test-runner"
                "-d" "test"]}
-  :jar {:extra-deps {seancorfield/depstar {:mvn/version "1.0.94"}}
-        :main-opts ["-m" "hf.depstar.jar" "tock.jar"]}
 
-  :install {:extra-deps {deps-deploy/deps-deploy {:mvn/version "0.0.9"}}
-            :main-opts ["-m" "deps-deploy.deps-deploy" "install" "tock.jar"]}
+  :jar
+  {:extra-deps {seancorfield/depstar {:mvn/version "1.0.94"}}
+   :main-opts ["-m" "hf.depstar.jar" "tock.jar"]}
 
-  :deploy {:extra-deps {deps-deploy/deps-deploy {:mvn/version "0.0.9"}}
-           :main-opts ["-m" "deps-deploy.deps-deploy" "deploy" "tock.jar"]}}}
+  :install
+  {:extra-deps {slipset/deps-deploy {:mvn/version "0.0.9"}}
+   :main-opts ["-m" "deps-deploy.deps-deploy" "install" "tock.jar"]}
+
+  :deploy
+  {:extra-deps {slipset/deps-deploy {:mvn/version "0.0.9"}}
+   :main-opts ["-m" "deps-deploy.deps-deploy" "deploy" "tock.jar"]}}}
