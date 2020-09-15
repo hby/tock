@@ -141,3 +141,24 @@
       [2020 1 1] 366 1 [[2021 1 1]]
       [2100 2 1] 27 2 [[2100 2 28] [2100 3 1]]
       [2100 1 1] 365 1 [[2101 1 1]])))
+
+(def fizz-buzz (counter [(digit :tock-builtin/seq (map #(str (inc %)) (range)))
+                         (digit :tock-builtin/fn (let [fizz-seq-atom (atom (cycle ["" "" "Fizz"]))]
+                                                   (fn []
+                                                     (let [v (first @fizz-seq-atom)]
+                                                       (swap! fizz-seq-atom rest)
+                                                       [v]))))
+                         (digit :tock-builtin/fn (let [buzz-seq-atom (atom (cycle ["" "" "" "" "Buzz"]))]
+                                                   (fn []
+                                                     (let [v (first @buzz-seq-atom)]
+                                                       (swap! buzz-seq-atom rest)
+                                                       [v]))))]))
+
+(deftest fizz-buzz-test
+  (testing "fizzbuzz"
+    (is (= ["1" "2" "Fizz" "4" "Buzz" "Fizz" "7" "8" "Fizz" "Buzz" "11" "Fizz" "13" "14" "FizzBuzz"]
+           (->> (-> fizz-buzz
+                    start
+                    value-seq)
+                (map (fn [[n f b]] (apply str (or (seq (str f b)) (seq n)))))
+                (take 15))))))
