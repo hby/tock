@@ -2,7 +2,9 @@
 
 A crazy, silly, little library for generalized counting.
 
-TODO - quote here
+> I have spent lots of time on totally useless problems.
+>
+>  -- Claude Shannon
 
 ## Status
 
