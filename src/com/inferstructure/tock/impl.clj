@@ -25,6 +25,23 @@
   (tick [this] [this hovs]
     "Returns an ICounter advanced one tick."))
 
+(defn extract-start-value
+  "Return [digit-fn start-value]"
+  [sv]
+  (let [raw-sv (first sv)]
+    (cond
+      (fn? raw-sv)
+      [raw-sv nil]
+
+      (and (vector? raw-sv) (fn? (first raw-sv)))
+      raw-sv
+
+      :else
+      [nil raw-sv])))
+
+(defn placeholder?
+  [f]
+  (get (meta f) ::digit-placeholder false))
 
 (defrecord Digit [dfn dseq]
   ICounter
@@ -34,11 +51,19 @@
   (start [d] (start d nil []))
   (start [d sv] (start d sv []))
   (start [d sv hovs]
-    (let [s (ar/apply-last-max-arity dfn hovs)]
-      (if sv
-        (do (assert (and (coll? sv) (= 1 (count sv))) "Wrong number of digits in start value")
-            (assoc d :dseq (drop-while #(not= (first sv) %) s)))
-        (assoc d :dseq s))))
+    (if (and sv (not= sv [:com.inferstructure.tock/sv*]))
+      (do
+        (assert (and (coll? sv) (= 1 (count sv))) "Wrong number of digits in start value")
+        (let [[sv-fn sv-v] (extract-start-value sv)
+              use-d (if sv-fn (assoc d :dfn sv-fn) d)
+              _ (when (placeholder? (:dfn use-d)) (throw (IllegalStateException. "Unfilled placeholder")))]
+          (if sv-v
+            (assoc use-d :dseq (drop-while #(not= sv-v %)
+                                           (ar/apply-last-max-arity (:dfn use-d) hovs)))
+            (assoc use-d :dseq (ar/apply-last-max-arity (:dfn use-d) hovs)))))
+      (do
+        (when (placeholder? dfn) (throw (IllegalStateException. "Unfilled placeholder")))
+        (assoc d :dseq (ar/apply-last-max-arity dfn hovs)))))
 
   (tick [d] (tick d []))
   (tick [d hovs]

@@ -2,9 +2,18 @@
 
 A crazy, silly, little library for generalized counting.
 
+## Goals
+
+It is possible that others will get a benefit from using this library 
+
 > I have spent lots of time on totally useless problems.
 >
 >  -- Claude Shannon
+
+> So What or Kind of Blue were done in that era, the right hour, the right day. It's over; it's on the record.
+>
+>  -- Miles Davis
+
 
 ## Status
 
@@ -19,7 +28,7 @@ Better Readme and blog post coming. For now, a REPL session:
 % clj
 user=> (require '[com.inferstructure.tock :as tk])
 nil
-user=> (def bit (tk/digit :tock-builtin/seq [0 1]))
+user=> (def bit (tk/digit ::tk/digit-seq [0 1]))
 #'user/bit
 user=> (def two-bit-counter (tk/counter [bit bit]))
 #'user/two-bit-counter
@@ -43,26 +52,25 @@ user=> (defn leap?
              true)
            false))
 #'user/leap?
-user=> (def ymd (tk/counter [(tk/digit :tock-builtin/fn (fn [] (iterate inc 2020)))
-                             (tk/digit :tock-builtin/fn (fn [] (range 1 13)))
-                             (tk/digit :tock-builtin/fn (fn [y m]
-                                                           (case m
-                                                             (1 3 5 7 8 10 12) (range 1 32)
-                                                             2 (range 1 (if (leap? y) 30 29))
-                                                             (4 6 9 11) (range 1 31))))]))
-#'user/ymd
-user=> (->> (-> ymd
+user=> (def y-m-d (tk/counter [(tk/digit ::tk/digit-fn (fn [] (iterate inc 2020)))
+                               (tk/digit ::tk/digit-fn (fn [] (range 1 13)))
+                               (tk/digit ::tk/digit-fn (fn [y m] (case m
+                                                                   (1 3 5 7 8 10 12) (range 1 32)
+                                                                   2 (range 1 (if (leap? y) 30 29))
+                                                                   (4 6 9 11) (range 1 31))))]))
+#'user/y-m-d
+user=> (->> (-> y-m-d
                 (tk/start)
                 (tk/value-seq))
             first)
 (2020 1 1)
-user=> (->> (-> ymd
+user=> (->> (-> y-m-d
                 (tk/start)
                 (tk/value-seq))
             (drop 365)
             (take 2))
 ((2020 12 31) (2021 1 1))
-user=> (->> (-> ymd
+user=> (->> (-> y-m-d
                 (tk/start [2020 11 3])
                 (tk/value-seq))
             (take-while #(not= % [2021 1 1]))
@@ -75,19 +83,19 @@ user=>
 
 Build a deployable jar of this library:
 
-    $ clojure -A:jar
+    $ clojure -M:jar
 
 Install it locally:
 
-    $ clojure -A:install
+    $ clojure -M:install
 
 Deploy it to Clojars -- needs `CLOJARS_USERNAME` and `CLOJARS_PASSWORD` environment variables:
 
-    $ clojure -A:deploy
+    $ clojure -M:deploy
 
 ## Running tests
 
-    $ clojure -A:test:runner
+    $ clojure -M:test:runner
 
 ## License
 
