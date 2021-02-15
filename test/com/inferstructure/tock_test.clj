@@ -31,7 +31,7 @@
                 (take 6))))))
 
 (deftest t2bit-force-infinite-test
-  (testing "two-bit infinite counter"
+  (testing "two-bit force infinite counter"
     (is (= [[0 0] [0 1] [1 0] [1 1] [0 0] [0 1] [1 0] [1 1] [0 0]]
            (->> (-> (tk/counter [bit bit])
                     (tk/start)
@@ -236,11 +236,20 @@
                           ::tk/sv*])
                (tk/value-seq))))))
 
+(deftest empty-digit-counter-test
+  (testing "empty-digit-counter"
+    (is (= [[1] [2]]
+           (->> (-> (tk/counter [(tk/digit ::tk/digit-seq [1 2])
+                                 (tk/digit ::tk/digit-seq [])])
+                    (tk/start)
+                    (tk/value-seq))
+                (take 3))))))
 
-;(def carry-2 (tk/counter [(tk/digit ::tk/digit-seq [1 2 3 4])
-;                          (tk/digit ::tk/digit-take-seq [:a :b :c :d] 2)]))
-;
-;(->> (-> carry-2
-;         (tk/start)
-;         (tk/value-seq))
-;     (take 6))
+(deftest take-2-counter-test
+  (testing "empty-digit-counter"
+    (is (= [[1 :a] [1 :b] [2 :c] [2 :d] [3] [4]]
+           (->> (-> (tk/counter [(tk/digit ::tk/digit-seq [1 2 3 4])
+                                 (tk/digit ::tk/digit-take-seq [:a :b :c :d] 2)])
+                    (tk/start)
+                    (tk/value-seq))
+                (take 6))))))

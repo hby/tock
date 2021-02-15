@@ -19,11 +19,14 @@
   "A Digit is an ICounter.
   A Counter is an ICounter composed of Digits and Counters."
   (value [this]
-    "Returns a list of the digit value or all counter values")
+    "Returns a list of all of the digit values.")
   (start [this] [this sv] [this sv hovs]
-    "Starts the counter with possible start value and possible higher order digits")
+    "Starts the counter with possible start value and possible higher order digits.
+    'Starting' is what establishes a sequence for each Digit based on starting values
+    and higher order digits.")
   (tick [this] [this hovs]
-    "Returns an ICounter advanced one tick."))
+    "Returns an ICounter advanced one tick. This can cause a call to 'start' when a
+    digit sequence runs out of values."))
 
 (defn extract-start-value
   "Return [digit-fn start-value]"
@@ -68,14 +71,24 @@
   (tick [d] (tick d []))
   (tick [d hovs]
     (if (seq dseq)
+      ;; we are not already run out
       (let [r (rest dseq)]
         (if (seq r)
+          ;; this tick does not run out of values,
+          ;; just set new seq
           (assoc d :dseq r)
+          ;; this tick runs out of values
           (if (empty? hovs)
+            ;; without hovs, just set new (empty) seq
             (assoc d :dseq r)
+            ;; with hovs, start the digit again
             (start d nil hovs))))
+      ;; we are already run out
       (if (empty? hovs)
+        ;; Without any hovs, this Digit has run out of values.
         d
+        ;; Will be given hovs when there are higher order digits and they have
+        ;; been asked to tick. Or, called directly with hovs in a REPL or test.
         (start d nil hovs)))))
 
 (defmethod print-method Digit
@@ -96,19 +109,27 @@
   (start [c sv] (start c sv []))
   (start [c sv hovs]
     (if hoc
+      ;; with a higher order counter,
+      ;;   need to start it
+      ;;   and use its value a our hovs.
       (let [ndig-hoc (num-digits hoc)
             ndig-ctr (num-digits ctr)
             _ (when sv
                 (assert (= (count sv) (+ ndig-hoc ndig-ctr))
                         "Wrong number of digits in start value"))
+            ;; split digits to pass to high order counter vs. this counter
             [ho-sv ctr-sv] (when sv (split-at ndig-hoc sv))
+            ;; start  high order counter
             new-hoc (start hoc
                            ho-sv
                            hovs)
+            ;; use high order counter value to start this counter
             new-ctr (start ctr
                            ctr-sv
                            (concat hovs (value new-hoc)))]
+        ;; put the pieces together
         (assoc c :hoc new-hoc :ctr new-ctr))
+      ;; no higher order counter, just start our ctr
       (assoc c :ctr (start ctr
                            sv
                            hovs))))
@@ -116,23 +137,57 @@
   (tick [c] (tick c []))
   (tick [c hovs]
     (if (empty? (value ctr))
-      (if (empty? hovs)
-        c
-        (start c nil hovs))
+      ;; we have already run out of values
+      (if hoc
+        ;; with a high order counter,
+        ;;   tick the high order counter and use its value to start this counter
+        (let [ticked-hoc (tick hoc hovs)
+              ticked-hoc-value (value ticked-hoc)]
+          (if (empty? ticked-hoc-value)
+            ;; if the high order counter has run out, assemble the pieces
+            ;;   tick this counter (even though empty) so that correct behavior
+            ;;   happens if we have hovs
+            (assoc c :hoc ticked-hoc
+                     :ctr (tick ctr hovs))
+            ;; if the high order counter has a value,
+            ;;   start this counter using the value of the high order counter
+            ;;   and assemble the pieces
+            (assoc c :ctr (start ctr nil (concat hovs ticked-hoc-value))
+                     :hoc ticked-hoc)))
+        ;; we have no high order counter
+        (if (empty? hovs)
+          ;; without hovs, we are done
+          c
+          ;; with hovs, we start again
+          (start c nil hovs)))
+      ;; we have not already run out of values,
+      ;; look at this counter that has been ticked
       (let [ticked-ctr (tick ctr)
             ticked-ctr-value (value ticked-ctr)]
         (if (empty? ticked-ctr-value)
+          ;; this ticked counter has run out
           (if hoc
+            ;; we have a high order counter
+            ;; tick the high order counter and use value to start this counter
             (let [ticked-hoc (tick hoc hovs)
                   ticked-hoc-value (value ticked-hoc)]
               (if (empty? ticked-hoc-value)
+                ;; if the high order counter has run out, assemble the pieces
                 (assoc c :ctr ticked-ctr
                          :hoc ticked-hoc)
+                ;; if the high order counter has a value,
+                ;;   start this counter using the value of the high order counter
+                ;;   and assemble the pieces
                 (assoc c :ctr (start ctr nil (concat hovs ticked-hoc-value))
                          :hoc ticked-hoc)))
+            ;; we do not have a high order counter
             (if (empty? hovs)
+              ;; without hovs, set the run out counter
               (assoc c :ctr ticked-ctr)
+              ;; with hovs, start this run out counter
               (start ctr nil hovs)))
+          ;; this ticked counter has not run out
+          ;; just set new ticked counter
           (assoc c :ctr ticked-ctr))))))
 
 (defn print-counter
