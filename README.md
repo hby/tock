@@ -61,15 +61,17 @@ A two-digit number normally means:
 - When a digit reaches the end of its sequence it starts over at 0, 
   and the next higher digit advances.
 
-We are so used to this kind of uniformity when we think of counting.
-Even numbers in abase othert than 10 has the same uniformity where
-each digit position runs through the sequence of numbers dictated by
-the base causing higher digit positions to advance as lower positions
-cycle back around to 0.
+We can easily generalize this by not assuming we are in base 10
+and change this description by replacing 9 with base-1.
+
+But there is another generality that is not readily seen in this
+example because of a ccertain kind of uniformity that we are so
+used to that it goes unseen.
 
 To help see how counting can be made more general consider a calendar.
-Let's say our 3 "digit" calendar numer is (year month day). As days
-(the lowest order digit) advance, they will cycle back around to 1
+Let's say our 3 "digit" calendar number is (year month day). 
+Here, counting means advancing the day digit.
+As the day advances, it will cycle back around to 1
 when you have exhausted all the days _for the current year and month_.
 The number of days in month depends on the month as well as whether
 it is a leap year.
@@ -77,26 +79,39 @@ it is a leap year.
 And it is here we get a glimpse behind the curtain and see more of how
 simple numbers actually work. When a base 10 digit advances from 9, the
 new sequence of numbers it will count through is determined by the
-higher order digits. But, as it happens, for natural numbers in our world
+higher order digits. But, as it happens, for natural numbers in our world,
 that sequence is a constant 0 through 9.
 
 Generalizing, we get this.
 ```
 For an n-digit number, (dn-1 dn-2 ... d1 d0),
-the sequence of numbers that di counts through is 
-fdi(dn-1 dn-2 ... di+1)
+the sequence of numbers that di counts through is a function
+of the value of all of the higher order digits, fdi.
 ```
 
-It just so happens that in most of the counting we are used to
-`fdi == (0 1 ...9) for all i`. But the world is full of much more
-comples examples of counting. We just need to look for them.
+It just so happens that for most of the counting we are used to
+`fdi` is the sequence `(0 1 ... 9)` for any i. 
+But the world is full of much more complex examples of counting. 
+We just need to look for them.
+
+## Counting, simply stated
+
+The tock library provides a general way to count where:
+- digits are grouped and ordered into a counter
+- a digit is a sequence that is defined in cooperation with 
+  the higher order digits of its containing counter
+- the mechanism of sequencing digits and handling the process 
+  of determining digit sequences based on higher order values 
+  is handled for you
 
 ## Purpose
 
 The purpose of this library is to provide these things:
 - a way to define counters with arbitrarily complex digit sequences
-- a way to easily specify common cases of digit sequences
+- an open way to easily specify common cases of digit sequences
 - a way to compose counters from other counters
+- a built-in mechanism to generate lazy sequnces of both counters
+  and counter values
 
 ## Goals
 
@@ -104,23 +119,28 @@ My main goal was to take a simple idea and play with it until I was satified
 that I exhausted all it had to offer me.
 
 Now, since a little library resulted from the exploriation, it is possible 
-that others  might get a benefit from using this library.
+that others  might get a benefit from using it.
+
 And, as I stated earlier, maybe someone will get a benefit from seeing how one
 person took a simple idea and just beat it relentlessly until it had no more
 to give.
 
-_TODO maybe - explain why I think this is enough to stop, for me._
-
-That said, Mr. Shannon and Mr. Davis sum up my feelings quite nicely.
+It is very possible that this will be nothing more than
+a personal, intellctual exercise.
+I'll be happy with that.
 
 > I have spent lots of time on totally useless problems.
 >
 >  -- Claude Shannon
 
+But, in any case, I think of this as a statement in time.
+Much like jazz groups that had musical ideas and went into the studio
+to record them before moving on, this is a reification of some ideas
+that can be referenced by others to spur further ideas.
+
 > So What or Kind of Blue were done in that era, the right hour, the right day. It's over; it's on the record.
 >
 >  -- Miles Davis
-
 
 ## Status
 
