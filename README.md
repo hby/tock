@@ -4,7 +4,7 @@ A crazy, silly, little library for generalized counting.
 
 ## Huh?
 
-What the heck is "generalized counting"?
+What the heck is __generalized counting__?
 
 > __count__
 > <br>
@@ -16,14 +16,16 @@ What the heck is "generalized counting"?
 
 Let's break this down.
 
-### to say the names of numbers
+_to say the names of numbers_
+<br>
 In our case, to 'say' a number is to produce the current value of a counter.
 A counter is an ordered collection of digits.
 In Clojure, this is an actual _sequence_ of digits.
 
 So, in our world of generlized counting, each number is a single (finite) sequence of digits.
 
-### one after the other
+_one after the other_
+<br>
 Counting takes a current number and produces another number according to
 some prescribed formula.
 Without much thought, we count 0, 1, 2, 3, ..., by applying the formula 'increment' 
@@ -32,7 +34,8 @@ to produce one number from the next.
 When we count (2020 2 28), (2020 2 29), (2020 3 1), we are applying a more complex
 formuala that understands how many days are in each month, leap years. etc.
 
-### in order
+_in order_
+<br>
 Since a counter knows how to produce a number after its current number, 
 it can be thought of as representing an ordered collection of numbers.
 
@@ -64,11 +67,11 @@ A two-digit number normally means:
 We can easily generalize this by not assuming we are in base 10
 and change this description by replacing 9 with base-1.
 
-But there is another generality that is not readily seen in this
-example because of a ccertain kind of uniformity that we are so
-used to that it goes unseen.
+But there is another generality that is nearly unseen in this
+example because we are so used to a certain kind of uniformity
+inherent in this particular counting process.
 
-To help see how counting can be made more general consider a calendar.
+To help see this other generality we consider a calendar.
 Let's say our 3 "digit" calendar number is (year month day). 
 Here, counting means advancing the day digit.
 As the day advances, it will cycle back around to 1
@@ -76,11 +79,11 @@ when you have exhausted all the days _for the current year and month_.
 The number of days in month depends on the month as well as whether
 it is a leap year.
 
-And it is here we get a glimpse behind the curtain and see more of how
+And it is here we get a glimpse behind the curtain and see how
 simple numbers actually work. When a base 10 digit advances from 9, the
 new sequence of numbers it will count through is determined by the
 higher order digits. But, as it happens, for natural numbers in our world,
-that sequence is a constant 0 through 9.
+that sequence is a constant (0 ... 9).
 
 Generalizing, we get this.
 ```
@@ -89,9 +92,13 @@ the sequence of numbers that di counts through is a function
 of the value of all of the higher order digits, fdi.
 ```
 
-It just so happens that for most of the counting we are used to
-`fdi` is the sequence `(0 1 ... 9)` for any i. 
-But the world is full of much more complex examples of counting. 
+It just so happens that for the counting we are mostly used to
+
+```
+fdi is the sequence (0 1 ... 9) for any i. 
+```
+
+But the world has a variety of examples of counting.
 We just need to look for them.
 
 ## Counting, simply stated
@@ -112,6 +119,7 @@ The purpose of this library is to provide these things:
 - a way to compose counters from other counters
 - a built-in mechanism to generate lazy sequnces of both counters
   and counter values
+- to ruin that old sweater of mine
 
 ## Goals
 
@@ -119,24 +127,24 @@ My main goal was to take a simple idea and play with it until I was satified
 that I exhausted all it had to offer me.
 
 Now, since a little library resulted from the exploriation, it is possible 
-that others  might get a benefit from using it.
+that others might get a benefit from using it.
 
 And, as I stated earlier, maybe someone will get a benefit from seeing how one
 person took a simple idea and just beat it relentlessly until it had no more
-to give.
+life to give.
 
-It is very possible that this will be nothing more than
-a personal, intellctual exercise.
+If this ends up no more than a personal, intellctual exercise,
 I'll be happy with that.
 
 > I have spent lots of time on totally useless problems.
 >
 >  -- Claude Shannon
 
-But, in any case, I think of this as a statement in time.
-Much like jazz groups that had musical ideas and went into the studio
-to record them before moving on, this is a reification of some ideas
-that can be referenced by others to spur further ideas.
+In any case, this as a statement in time.
+Much like jazz groups that recorded their musical ideas 
+for others to build on, this is a record of some code ideas
+that could influence further ideas in others. That is something
+I would like to see more of.
 
 > So What or Kind of Blue were done in that era, the right hour, the right day. It's over; it's on the record.
 >
