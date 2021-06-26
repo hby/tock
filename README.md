@@ -28,10 +28,10 @@ _one after the other_
 <br>
 Counting takes a current number and produces another number according to
 some prescribed formula.
-Without much thought, we count 0, 1, 2, 3, ..., by applying the formula 'increment' 
+Without much thought, we count `0, 1, 2, 3, ...`, by applying the formula `increment` 
 to produce one number from the next. 
 
-When we count (2020 2 28), (2020 2 29), (2020 3 1), we are applying a more complex
+When we count `(2020 2 28), (2020 2 29), (2020 3 1)`, we are applying a more complex
 formuala that understands how many days are in each month, leap years. etc.
 
 _in order_
@@ -72,7 +72,7 @@ example because we are so used to a certain kind of uniformity
 inherent in this particular counting process.
 
 To help see this other generality we consider a calendar.
-Let's say our 3 "digit" calendar number is (year month day). 
+Let's say our 3 "digit" calendar number is `(year month day)`. 
 Here, counting means advancing the day digit.
 As the day advances, it will cycle back around to 1
 when you have exhausted all the days _for the current year and month_.
@@ -83,20 +83,17 @@ And it is here we get a glimpse behind the curtain and see how
 simple numbers actually work. When a base 10 digit advances from 9, the
 new sequence of numbers it will count through is determined by the
 higher order digits. But, as it happens, for natural numbers in our world,
-that sequence is a constant (0 ... 9).
+that sequence is a constant `(0 ... 9)`.
 
 Generalizing, we get this.
 ```
 For an n-digit number, (dn-1 dn-2 ... d1 d0),
 the sequence of numbers that di counts through is a function
-of the value of all of the higher order digits, fdi.
+of the value of all of the higher order digits, (fdi di+1 ... dn-1).
 ```
 
-It just so happens that for the counting we are mostly used to
-
-```
-fdi is the sequence (0 1 ... 9) for any i. 
-```
+It just so happens that for the counting we are mostly used to,
+the value of calling `fdi` is the sequence `(0 1 ... 9) for any i`.
 
 But the world has a variety of examples of counting.
 We just need to look for them.
