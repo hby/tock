@@ -98,7 +98,7 @@
       four-bit-linear two-bit false)))
 
 (deftest multi-value-digit-test
-  (testing "multi-value-digit-test"
+  (testing "multi-value-digit"
     (is (= [[[0 0] 0] [[0 0] 1] [[0 1] 0] [[0 1] 1]
             [[1 0] 0] [[1 0] 1] [[1 1] 0] [[1 1] 1]]
            (-> (tk/counter [(tk/digit ::tk/digit-seq [[0 0] [0 1] [1 0] [1 1]])
@@ -107,7 +107,7 @@
                (tk/value-seq))))))
 
 (deftest multi-value-digit-start-test
-  (testing "multi-value-digit-test"
+  (testing "multi-value-digit-start"
     (is (= [[[1 0] 1] [[1 1] 0] [[1 1] 1]]
            (-> (tk/counter [(tk/digit ::tk/digit-seq [[0 0] [0 1] [1 0] [1 1]])
                             (tk/digit ::tk/digit-seq [0 1])])
@@ -225,7 +225,7 @@
                               (tk/start [(tk/digit-fn ::tk/digit-placeholder)]))))))
 
 (deftest middle-placeholder-start-test
-  (testing "middle-placeholder-start-test"
+  (testing "middle-placeholder-start"
     (is (= [[1 999 :a] [1 999 :b]
             [2 999 :a] [2 999 :b]]
            (-> (tk/counter [(tk/digit ::tk/digit-seq [1 2])
@@ -237,7 +237,7 @@
                (tk/value-seq))))))
 
 (deftest no-placeholder-sub-digit-fn-on-start-test
-  (testing "no-placeholder-sub-digit-fn-on-start-test"
+  (testing "no-placeholder-sub-digit-fn-on-start"
     (is (= [[:z 100 :a] [:z 100 :b] [:z 200 :a] [:z 200 :b]]
            (-> (tk/counter [(tk/digit ::tk/digit-seq [:x :y])
                             (tk/digit ::tk/digit-seq [1 2])
@@ -257,7 +257,7 @@
                 (take 3))))))
 
 (deftest take-2-counter-test
-  (testing "empty-digit-counter"
+  (testing "take-2-counter"
     (is (= [[1 :a] [1 :b] [2 :c] [2 :d] [3] [4]]
            (->> (-> (tk/counter [(tk/digit ::tk/digit-seq [1 2 3 4])
                                  (tk/digit ::tk/digit-take-seq [:a :b :c :d] 2)])
