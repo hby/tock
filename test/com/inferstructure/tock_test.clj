@@ -126,12 +126,37 @@
                  (tk/value-seq)))))))
 
 (deftest conditional-counter-test
-  (testing "conditional counter"
-    (is (= [[:ted :dust] [:ted :garbage]
-            [:alice :dishes] [:alice :water]]
+  (testing "single conditional counter"
+    (is (= [[:ted :dust] [:ted :dishes]
+            [:alice :garbage] [:alice :water]]
            (-> (tk/counter [(tk/digit ::tk/digit-seq [:ted :alice])
-                            (tk/digit ::tk/digit-kvs {[:ted] [:dust :garbage]
-                                                      [:alice] [:dishes :water]})])
+                            (tk/digit ::tk/digit-kvs {[:ted] [:dust :dishes]
+                                                      [:alice] [:garbage :water]})])
+               (tk/start)
+               (tk/value-seq)))))
+  (testing "multiple conditional counter"
+    (is (= [[:mother :ted :dust] [:mother :ted :dishes]
+            [:father :alice :garbage] [:father :alice :water]]
+           (-> (tk/counter [(tk/digit ::tk/digit-seq [:mother :father])
+                            (tk/digit ::tk/digit-kvs {[:father] [:alice]
+                                                      [:mother] [:ted]})
+                            (tk/digit ::tk/digit-kvs {[:ted] [:dust :dishes]
+                                                      [:alice] [:garbage :water]})])
+               (tk/start)
+               (tk/value-seq)))))
+  (testing "non-uniform multiple conditional counter"
+    (is (= [[:mother :ted :dust] [:mother :alice :garbage] [:mother :alice :water]
+            [:father :ted :dust] [:father :ted :dishes] [:father :alice :dinner]
+            [:uncle :ted :football] [:uncle :alice :garbage] [:uncle :alice :water]]
+           (-> (tk/counter [(tk/digit ::tk/digit-seq [:mother :father :uncle])
+                            (tk/digit ::tk/digit-seq [:ted :alice])
+                            ;; use an explict sequence of key-value pairs
+                            ;; here since lookup order matters
+                            (tk/digit ::tk/digit-kvs [[[:mother :ted] [:dust]]
+                                                      [[:uncle :ted] [:football]]
+                                                      [[:father :alice] [:dinner]]
+                                                      [[:ted] [:dust :dishes]]
+                                                      [[:alice] [:garbage :water]]])])
                (tk/start)
                (tk/value-seq))))))
 
