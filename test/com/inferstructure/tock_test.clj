@@ -236,6 +236,17 @@
                           ::tk/sv*])
                (tk/value-seq))))))
 
+(deftest no-placeholder-sub-digit-fn-on-start-test
+  (testing "no-placeholder-sub-digit-fn-on-start-test"
+    (is (= [[:z 100 :a] [:z 100 :b] [:z 200 :a] [:z 200 :b]]
+           (-> (tk/counter [(tk/digit ::tk/digit-seq [:x :y])
+                            (tk/digit ::tk/digit-seq [1 2])
+                            (tk/digit ::tk/digit-seq [:a :b])])
+               (tk/start [(tk/digit-fn ::tk/digit-seq [:z])
+                          (tk/digit-fn ::tk/digit-seq [100 200])
+                          ::tk/sv*])
+               (tk/value-seq))))))
+
 (deftest empty-digit-counter-test
   (testing "empty-digit-counter"
     (is (= [[1] [2]]
